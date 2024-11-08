@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { getErrorMessageFromReq } from "../lib/handleErrors";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -10,13 +12,37 @@ type LoginInputs = {
   password: string;
 };
 function HomePage() {
+  const [loginError, setLoginError] = useState<string | undefined>();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginInputs>();
 
-  const onSubmit: SubmitHandler<LoginInputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
+    const res = await fetch("http://localhost:3000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      mode: "cors",
+      body: JSON.stringify({ email: data.email, password: data.password }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      console.log(data);
+      if (data.success === true) {
+        setLoginError(undefined);
+        localStorage.setItem("auth_token", data.token);
+      } else {
+        setLoginError("Error loggin in");
+      }
+    } else {
+      const data = await res.json();
+      const message = getErrorMessageFromReq(data);
+      setLoginError(message || "Some Strange Error Occured");
+    }
+  };
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center gap-6 bg-slate-50 pt-14 text-slate-900 lg:pt-20">
@@ -25,6 +51,11 @@ function HomePage() {
           onSubmit={handleSubmit(onSubmit)}
           className="flex w-full max-w-xs flex-col gap-6 rounded-lg border border-slate-300 bg-white p-6 shadow-md"
         >
+          {loginError && (
+            <p className="rounded-md bg-red-100 p-2 text-red-800">
+              {loginError}
+            </p>
+          )}
           <div className="flex flex-col gap-2">
             <label
               htmlFor="email"
