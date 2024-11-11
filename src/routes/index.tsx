@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { getErrorMessageFromReq } from "../lib/handleErrors";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -12,6 +13,7 @@ type LoginInputs = {
   password: string;
 };
 function HomePage() {
+  const queryClient = useQueryClient();
   const [loginError, setLoginError] = useState<string | undefined>();
   const {
     register,
@@ -34,6 +36,7 @@ function HomePage() {
       if (data.success === true) {
         setLoginError(undefined);
         localStorage.setItem("auth_token", data.token);
+        queryClient.invalidateQueries(["user"]);
       } else {
         setLoginError("Error loggin in");
       }
