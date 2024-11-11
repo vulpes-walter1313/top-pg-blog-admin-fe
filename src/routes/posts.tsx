@@ -20,7 +20,7 @@ function PostsPage() {
     <div className="min-h-screen bg-slate-50 px-4 py-16 text-slate-950">
       <h1 className="pb-10 text-center text-slate-950">All Posts</h1>
       <div className="mx-auto flex w-full max-w-4xl gap-16">
-        <aside className="w-full max-w-48 self-start rounded-lg border border-slate-300 bg-white p-4">
+        <aside className="flex w-full max-w-48 flex-col items-start gap-4 self-start rounded-lg border border-slate-300 bg-white p-4">
           <h3 className="text-slate-800">Filters</h3>
           <ul className="list-none">
             <li>
@@ -33,6 +33,9 @@ function PostsPage() {
               <Link href="/posts?publishedstatus=unpublished">Unpublished</Link>
             </li>
           </ul>
+          <Link className="rounded-lg bg-indigo-700 px-6 py-2 font-sans text-lg font-semibold text-white">
+            Create Post
+          </Link>
         </aside>
         <main className="flex flex-col gap-4">
           {postQuery.isLoading && (
