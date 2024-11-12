@@ -13,8 +13,9 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as PostsImport } from './routes/posts'
 import { Route as IndexImport } from './routes/index'
+import { Route as PostsIndexImport } from './routes/posts.index'
+import { Route as PostsCreateImport } from './routes/posts.create'
 
 // Create Virtual Routes
 
@@ -28,15 +29,21 @@ const AboutLazyRoute = AboutLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 
-const PostsRoute = PostsImport.update({
-  id: '/posts',
-  path: '/posts',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PostsIndexRoute = PostsIndexImport.update({
+  id: '/posts/',
+  path: '/posts/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PostsCreateRoute = PostsCreateImport.update({
+  id: '/posts/create',
+  path: '/posts/create',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -51,18 +58,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/posts': {
-      id: '/posts'
-      path: '/posts'
-      fullPath: '/posts'
-      preLoaderRoute: typeof PostsImport
-      parentRoute: typeof rootRoute
-    }
     '/about': {
       id: '/about'
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/posts/create': {
+      id: '/posts/create'
+      path: '/posts/create'
+      fullPath: '/posts/create'
+      preLoaderRoute: typeof PostsCreateImport
+      parentRoute: typeof rootRoute
+    }
+    '/posts/': {
+      id: '/posts/'
+      path: '/posts'
+      fullPath: '/posts'
+      preLoaderRoute: typeof PostsIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -72,42 +86,47 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/posts': typeof PostsRoute
   '/about': typeof AboutLazyRoute
+  '/posts/create': typeof PostsCreateRoute
+  '/posts': typeof PostsIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/posts': typeof PostsRoute
   '/about': typeof AboutLazyRoute
+  '/posts/create': typeof PostsCreateRoute
+  '/posts': typeof PostsIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/posts': typeof PostsRoute
   '/about': typeof AboutLazyRoute
+  '/posts/create': typeof PostsCreateRoute
+  '/posts/': typeof PostsIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/posts' | '/about'
+  fullPaths: '/' | '/about' | '/posts/create' | '/posts'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/posts' | '/about'
-  id: '__root__' | '/' | '/posts' | '/about'
+  to: '/' | '/about' | '/posts/create' | '/posts'
+  id: '__root__' | '/' | '/about' | '/posts/create' | '/posts/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  PostsRoute: typeof PostsRoute
   AboutLazyRoute: typeof AboutLazyRoute
+  PostsCreateRoute: typeof PostsCreateRoute
+  PostsIndexRoute: typeof PostsIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  PostsRoute: PostsRoute,
   AboutLazyRoute: AboutLazyRoute,
+  PostsCreateRoute: PostsCreateRoute,
+  PostsIndexRoute: PostsIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -121,18 +140,22 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/posts",
-        "/about"
+        "/about",
+        "/posts/create",
+        "/posts/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/posts": {
-      "filePath": "posts.tsx"
-    },
     "/about": {
       "filePath": "about.lazy.tsx"
+    },
+    "/posts/create": {
+      "filePath": "posts.create.tsx"
+    },
+    "/posts/": {
+      "filePath": "posts.index.tsx"
     }
   }
 }
