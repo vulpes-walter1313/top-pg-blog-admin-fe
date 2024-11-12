@@ -1,21 +1,21 @@
-import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
-import { createFileRoute } from "@tanstack/react-router";
-import { getPosts } from "../lib/queries";
-import type { PostType } from "../../types.ts";
+import { useQuery } from '@tanstack/react-query'
+import { Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
+import { getPosts } from '../lib/queries.ts'
+import type { PostType } from '../../types.ts'
 
-export const Route = createFileRoute("/posts")({
+export const Route = createFileRoute('/posts/')({
   component: PostsPage,
-});
+})
 
 function PostsPage() {
   const postQuery = useQuery({
-    queryKey: ["posts"],
+    queryKey: ['posts'],
     queryFn: async () => {
-      const data = await getPosts(1, "all");
-      return data;
+      const data = await getPosts(1, 'all')
+      return data
     },
-  });
+  })
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-16 text-slate-950">
       <h1 className="pb-10 text-center text-slate-950">All Posts</h1>
@@ -33,7 +33,10 @@ function PostsPage() {
               <Link href="/posts?publishedstatus=unpublished">Unpublished</Link>
             </li>
           </ul>
-          <Link className="rounded-lg bg-indigo-700 px-6 py-2 font-sans text-lg font-semibold text-white">
+          <Link
+            className="rounded-lg bg-indigo-700 px-6 py-2 font-sans text-lg font-semibold text-white"
+            to="/posts/create"
+          >
             Create Post
           </Link>
         </aside>
@@ -48,7 +51,7 @@ function PostsPage() {
                 <div>
                   <h2 className="pb-4">{post.title}</h2>
                   <p className="pb-2">
-                    {post.content.split(" ").slice(0, 20).join(" ")}...
+                    {post.content.split(' ').slice(0, 20).join(' ')}...
                   </p>
                   <p className="text-mobsmp text-slate-600 lg:text-desksmp">
                     {post._count.comments} comments
@@ -65,5 +68,5 @@ function PostsPage() {
         </main>
       </div>
     </div>
-  );
+  )
 }
