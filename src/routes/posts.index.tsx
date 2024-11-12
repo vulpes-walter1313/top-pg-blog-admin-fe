@@ -1,21 +1,22 @@
-import { useQuery } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
-import { createFileRoute } from '@tanstack/react-router'
-import { getPosts } from '../lib/queries.ts'
-import type { PostType } from '../../types.ts'
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { getPosts } from "../lib/queries.ts";
+import type { PostType } from "../../types.ts";
+import he from "he";
 
-export const Route = createFileRoute('/posts/')({
+export const Route = createFileRoute("/posts/")({
   component: PostsPage,
-})
+});
 
 function PostsPage() {
   const postQuery = useQuery({
-    queryKey: ['posts'],
+    queryKey: ["posts"],
     queryFn: async () => {
-      const data = await getPosts(1, 'all')
-      return data
+      const data = await getPosts(1, "all");
+      return data;
     },
-  })
+  });
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-16 text-slate-950">
       <h1 className="pb-10 text-center text-slate-950">All Posts</h1>
@@ -49,9 +50,10 @@ function PostsPage() {
             postQuery.data.posts.map((post: PostType) => (
               <article className="flex flex-col items-start gap-10 rounded-lg border border-slate-300 bg-white px-4 py-6">
                 <div>
-                  <h2 className="pb-4">{post.title}</h2>
+                  <h2 className="pb-4">{he.decode(post.title)}</h2>
                   <p className="pb-2">
-                    {post.content.split(' ').slice(0, 20).join(' ')}...
+                    {he.decode(post.content).split(" ").slice(0, 20).join(" ")}
+                    ...
                   </p>
                   <p className="text-mobsmp text-slate-600 lg:text-desksmp">
                     {post._count.comments} comments
@@ -68,5 +70,5 @@ function PostsPage() {
         </main>
       </div>
     </div>
-  )
+  );
 }
