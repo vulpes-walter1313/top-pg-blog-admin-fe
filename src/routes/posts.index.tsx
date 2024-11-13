@@ -61,7 +61,8 @@ function PostsPage() {
                 </div>
                 <Link
                   className="rounded-lg border-2 border-indigo-700 px-6 py-2 font-sans font-semibold text-indigo-700"
-                  href={`/posts/${post.slug}`}
+                  to='/posts/$postSlug'
+                  params={{ postSlug: post.slug }}
                 >
                   View
                 </Link>
