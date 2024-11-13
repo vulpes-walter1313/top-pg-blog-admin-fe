@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { getErrorMessageFromReq } from "../lib/handleErrors";
@@ -13,6 +13,7 @@ type LoginInputs = {
   password: string;
 };
 function HomePage() {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [loginError, setLoginError] = useState<string | undefined>();
   const {
@@ -37,6 +38,7 @@ function HomePage() {
         setLoginError(undefined);
         localStorage.setItem("auth_token", data.token);
         queryClient.invalidateQueries(["user"]);
+        navigate({ to: "/posts" });
       } else {
         setLoginError("Error loggin in");
       }
