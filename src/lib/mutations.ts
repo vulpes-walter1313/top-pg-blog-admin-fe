@@ -17,7 +17,7 @@ export const createPost = (data: CreatePostPayload) => {
   if (authToken) {
     fetchOptions.headers = {
       "Content-Type": "application/json",
-      "Authorization": authToken,
+      Authorization: authToken,
     };
   } else {
     fetchOptions.headers = {
@@ -25,4 +25,18 @@ export const createPost = (data: CreatePostPayload) => {
     };
   }
   return fetch(`http://localhost:3000/posts`, fetchOptions);
+};
+
+export const deletePost = (postSlug: string) => {
+  const authToken = localStorage.getItem("auth_token");
+  const fetchOptions: RequestInit = {
+    method: "DELETE",
+    mode: "cors",
+  };
+  if (authToken) {
+    fetchOptions.headers = {
+      Authorization: authToken,
+    };
+  }
+  return fetch(`http://localhost:3000/posts/${postSlug}`, fetchOptions);
 };

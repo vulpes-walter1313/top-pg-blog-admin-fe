@@ -1,9 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { getPost, getPostComments } from "../lib/queries";
 import he from "he";
 import { DateTime } from "luxon";
 import { useState } from "react";
+import { deletePost } from "../lib/mutations";
+import DeletePostModal from "../components/DeletePostModal";
 
 export const Route = createFileRoute("/posts/$postSlug")({
   component: PostPage,
@@ -20,6 +22,11 @@ type CommentType = {
 };
 function PostPage() {
   const params = Route.useParams();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const [showDelConfirm, setShowDelConfirm] = useState(false);
+
   const postQuery = useQuery({
     queryKey: ["post", params.postSlug],
     queryFn: async () => {
@@ -36,6 +43,14 @@ function PostPage() {
       return data;
     },
   });
+
+  const deletePostMuta = useMutation({
+    mutationFn: async () => deletePost(params.postSlug),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["posts"]);
+      navigate({ to: "/posts" });
+    },
+  });
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-950">
       <div className="mx-auto flex max-w-5xl gap-14 px-4 py-16">
@@ -46,6 +61,7 @@ function PostPage() {
           <button
             type="button"
             className="rounded-lg border-2 border-red-600 bg-red-600 px-6 py-2 font-semibold text-white"
+            onClick={() => setShowDelConfirm(true)}
           >
             Delete
           </button>
@@ -125,7 +141,8 @@ function PostPage() {
                 })}
             </div>
             {commentsQuery.data &&
-              commentsQuery.data.totalPages != undefined && (
+              commentsQuery.data.totalPages != undefined &&
+              commentsQuery.data.totalComments > 0 && (
                 <div className="mt-8 flex gap-4">
                   {Array.from({ length: commentsQuery.data.totalPages }).map(
                     (_, idx) => {
@@ -144,6 +161,14 @@ function PostPage() {
           </div>
         </main>
       </div>
+      {postQuery.data && postQuery.data.post && (
+        <DeletePostModal
+          show={showDelConfirm}
+          postTitle={postQuery.data.post.title}
+          setShow={setShowDelConfirm}
+          deletePostFunc={deletePostMuta.mutate}
+        />
+      )}
     </div>
   );
 }
