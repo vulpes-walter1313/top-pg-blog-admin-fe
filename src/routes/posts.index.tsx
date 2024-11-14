@@ -4,16 +4,31 @@ import { createFileRoute } from "@tanstack/react-router";
 import { getPosts } from "../lib/queries.ts";
 import type { PostType } from "../../types.ts";
 import he from "he";
+import { z } from "zod";
+
+const postsSearchSchema = z.object({
+  page: z.number().optional().catch(1),
+  publishedstatus: z
+    .enum(["all", "published", "unpublished"])
+    .optional()
+    .catch("all"),
+});
+// type PostsSearch = z.infer<typeof postsSearchSchema>
 
 export const Route = createFileRoute("/posts/")({
   component: PostsPage,
+  validateSearch: (search) => postsSearchSchema.parse(search),
 });
 
 function PostsPage() {
+  const search = Route.useSearch();
   const postQuery = useQuery({
-    queryKey: ["posts"],
+    queryKey: ["posts", search.publishedstatus ?? "all", search.page ?? 1],
     queryFn: async () => {
-      const data = await getPosts(1, "all");
+      const data = await getPosts(
+        search.page ?? 1,
+        search.publishedstatus ?? "all",
+      );
       return data;
     },
   });
@@ -25,13 +40,31 @@ function PostsPage() {
           <h3 className="text-slate-800">Filters</h3>
           <ul className="list-none">
             <li>
-              <Link href="/posts">All</Link>
+              <Link
+                to="/posts"
+                search={{ publishedstatus: "all" }}
+                className={`${search.publishedstatus === "all" ? "font-semibold" : ""}`}
+              >
+                All
+              </Link>
             </li>
             <li>
-              <Link href="/posts?publishedstatus=published">Published</Link>
+              <Link
+                to="/posts"
+                search={{ publishedstatus: "published" }}
+                className={`${search.publishedstatus === "published" ? "font-semibold" : ""}`}
+              >
+                Published
+              </Link>
             </li>
             <li>
-              <Link href="/posts?publishedstatus=unpublished">Unpublished</Link>
+              <Link
+                to="/posts"
+                search={{ publishedstatus: "unpublished" }}
+                className={`${search.publishedstatus === "unpublished" ? "font-semibold" : ""}`}
+              >
+                Unpublished
+              </Link>
             </li>
           </ul>
           <Link
