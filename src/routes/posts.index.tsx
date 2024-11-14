@@ -48,7 +48,7 @@ function PostsPage() {
           {postQuery.data &&
             postQuery.data.posts &&
             postQuery.data.posts.map((post: PostType) => (
-              <article className="flex flex-col items-start gap-10 rounded-lg border border-slate-300 bg-white px-4 py-6">
+              <article className="flex flex-col items-start gap-6 rounded-lg border border-slate-300 bg-white px-4 py-6">
                 <div>
                   <h2 className="pb-4">{he.decode(post.title)}</h2>
                   <p className="pb-2">
@@ -58,10 +58,19 @@ function PostsPage() {
                   <p className="text-mobsmp text-slate-600 lg:text-desksmp">
                     {post._count.comments} comments
                   </p>
+                  {post.published === true ? (
+                    <p className="mt-2 w-min rounded-lg bg-green-300 px-2 py-1 text-mobxsp text-green-800 lg:text-deskxsp">
+                      Published
+                    </p>
+                  ) : (
+                    <p className="mt-2 w-max rounded-lg bg-amber-300 px-2 py-1 text-mobxsp text-amber-800 lg:text-deskxsp">
+                      Draft Mode
+                    </p>
+                  )}
                 </div>
                 <Link
                   className="rounded-lg border-2 border-indigo-700 px-6 py-2 font-sans font-semibold text-indigo-700"
-                  to='/posts/$postSlug'
+                  to="/posts/$postSlug"
                   params={{ postSlug: post.slug }}
                 >
                   View
