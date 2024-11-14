@@ -110,6 +110,27 @@ function PostsPage() {
                 </Link>
               </article>
             ))}
+          <div className="flex gap-2">
+            {/* pagination for posts */}
+            {postQuery.data &&
+              postQuery.data.totalPages != undefined &&
+              Array.from({ length: postQuery.data.totalPages }).map(
+                (_, idx) => {
+                  return (
+                    <Link
+                      to="/posts"
+                      search={{
+                        publishedstatus: search.publishedstatus ?? "all",
+                        page: idx + 1,
+                      }}
+                      className={`rounded-lg border border-slate-300 bg-white p-2 text-mobsmp shadow-sm lg:text-desksmp ${search.page === idx + 1 ? "font-semibold lg:font-semibold" : ""}`}
+                    >
+                      {idx + 1}
+                    </Link>
+                  );
+                },
+              )}
+          </div>
         </main>
       </div>
     </div>
