@@ -37,7 +37,7 @@ function PostPage() {
 
   const [commentsPage, setCommentsPage] = useState(1);
   const commentsQuery = useQuery({
-    queryKey: ["comments", params.postSlug],
+    queryKey: ["comments", params.postSlug, commentsPage],
     queryFn: async () => {
       const data = await getPostComments(params.postSlug, commentsPage);
       return data;
@@ -68,6 +68,7 @@ function PostPage() {
         </aside>
         <main className="flex flex-col gap-8">
           <div className="rounded-lg border border-slate-300 bg-white p-4">
+            {/* Post data block */}
             {postQuery.isError && (
               <p className="bg-red-100 p-4 text-red-800">
                 Error occured in fetching post
@@ -100,6 +101,7 @@ function PostPage() {
               </>
             )}
           </div>
+          {/* Comments Block */}
           <div className="rounded-lg border border-slate-300 bg-white px-4 py-6">
             {commentsQuery.data &&
               commentsQuery.data.totalComments != undefined && (
