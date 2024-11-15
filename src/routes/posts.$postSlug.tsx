@@ -4,7 +4,7 @@ import { getPost, getPostComments } from "../lib/queries";
 import he from "he";
 import { DateTime } from "luxon";
 import { useState } from "react";
-import { deletePost } from "../lib/mutations";
+import { deleteComment, deletePost } from "../lib/mutations";
 import DeletePostModal from "../components/DeletePostModal";
 
 export const Route = createFileRoute("/posts/$postSlug")({
@@ -51,6 +51,22 @@ function PostPage() {
       navigate({ to: "/posts" });
     },
   });
+
+  const deleteCommentMuta = useMutation({
+    mutationFn: ({
+      postSlug,
+      commentId,
+    }: {
+      postSlug: string;
+      commentId: number;
+    }) => {
+      return deleteComment(postSlug, commentId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["comments", params.postSlug]);
+    },
+  });
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-950">
       <div className="mx-auto flex max-w-5xl gap-14 px-4 py-16">
@@ -138,6 +154,18 @@ function PostPage() {
                       <p className="text-mobp text-slate-800 lg:text-deskp">
                         {comment.content}
                       </p>
+                      <button
+                        type="button"
+                        className="text-mobsmp text-red-700 lg:text-desksmp"
+                        onClick={() =>
+                          deleteCommentMuta.mutate({
+                            postSlug: params.postSlug,
+                            commentId: comment.id,
+                          })
+                        }
+                      >
+                        Delete
+                      </button>
                     </div>
                   );
                 })}

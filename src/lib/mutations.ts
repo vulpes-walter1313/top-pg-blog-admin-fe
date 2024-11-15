@@ -40,3 +40,20 @@ export const deletePost = (postSlug: string) => {
   }
   return fetch(`http://localhost:3000/posts/${postSlug}`, fetchOptions);
 };
+
+export const deleteComment = (postSlug: string, commentId: number) => {
+  const authToken = localStorage.getItem("auth_token");
+  const fetchOptions: RequestInit = {
+    method: "DELETE",
+    mode: "cors",
+  };
+  if (authToken) {
+    fetchOptions.headers = {
+      Authorization: authToken,
+    };
+  }
+  return fetch(
+    `http://localhost:3000/posts/${postSlug}/comments/${commentId}`,
+    fetchOptions,
+  );
+};
