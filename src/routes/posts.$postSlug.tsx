@@ -71,7 +71,11 @@ function PostPage() {
     <div className="min-h-screen bg-slate-50 font-sans text-slate-950">
       <div className="mx-auto flex max-w-5xl gap-14 px-4 py-16">
         <aside className="flex gap-4 self-start rounded-lg border border-slate-300 bg-white p-4">
-          <Link className="rounded-lg border-2 border-slate-800 px-6 py-2 font-semibold text-slate-800">
+          <Link
+            className="rounded-lg border-2 border-slate-800 px-6 py-2 font-semibold text-slate-800"
+            to="/posts/$postSlug/edit"
+            params={{ postSlug: params.postSlug }}
+          >
             Edit
           </Link>
           <button
