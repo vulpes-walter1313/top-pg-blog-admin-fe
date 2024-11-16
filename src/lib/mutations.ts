@@ -57,3 +57,35 @@ export const deleteComment = (postSlug: string, commentId: number) => {
     fetchOptions,
   );
 };
+
+type UpdatePostPayload = {
+  postSlug: string;
+  title: string;
+  content: string;
+  slug: string;
+  published: boolean;
+};
+export const updatePost = (data: UpdatePostPayload) => {
+  const authToken = localStorage.getItem("auth_token");
+  const fetchOptions: RequestInit = {
+    method: "PUT",
+    mode: "cors",
+    body: JSON.stringify({
+      title: data.title,
+      content: data.content,
+      slug: data.slug,
+      published: data.published,
+    }),
+  };
+  if (authToken) {
+    fetchOptions.headers = {
+      Authorization: authToken,
+      "Content-Type": "application/json",
+    };
+  } else {
+    fetchOptions.headers = {
+      "Content-Type": "application/json",
+    };
+  }
+  return fetch(`http://localhost:3000/posts/${data.postSlug}`, fetchOptions);
+};

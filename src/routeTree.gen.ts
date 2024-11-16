@@ -17,6 +17,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as PostsIndexImport } from './routes/posts.index'
 import { Route as PostsCreateImport } from './routes/posts.create'
 import { Route as PostsPostSlugImport } from './routes/posts.$postSlug'
+import { Route as PostsPostSlugEditImport } from './routes/posts_.$postSlug.edit'
 
 // Create Virtual Routes
 
@@ -51,6 +52,12 @@ const PostsCreateRoute = PostsCreateImport.update({
 const PostsPostSlugRoute = PostsPostSlugImport.update({
   id: '/posts/$postSlug',
   path: '/posts/$postSlug',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PostsPostSlugEditRoute = PostsPostSlugEditImport.update({
+  id: '/posts_/$postSlug/edit',
+  path: '/posts/$postSlug/edit',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -93,6 +100,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PostsIndexImport
       parentRoute: typeof rootRoute
     }
+    '/posts_/$postSlug/edit': {
+      id: '/posts_/$postSlug/edit'
+      path: '/posts/$postSlug/edit'
+      fullPath: '/posts/$postSlug/edit'
+      preLoaderRoute: typeof PostsPostSlugEditImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -104,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/posts/$postSlug': typeof PostsPostSlugRoute
   '/posts/create': typeof PostsCreateRoute
   '/posts': typeof PostsIndexRoute
+  '/posts/$postSlug/edit': typeof PostsPostSlugEditRoute
 }
 
 export interface FileRoutesByTo {
@@ -112,6 +127,7 @@ export interface FileRoutesByTo {
   '/posts/$postSlug': typeof PostsPostSlugRoute
   '/posts/create': typeof PostsCreateRoute
   '/posts': typeof PostsIndexRoute
+  '/posts/$postSlug/edit': typeof PostsPostSlugEditRoute
 }
 
 export interface FileRoutesById {
@@ -121,13 +137,26 @@ export interface FileRoutesById {
   '/posts/$postSlug': typeof PostsPostSlugRoute
   '/posts/create': typeof PostsCreateRoute
   '/posts/': typeof PostsIndexRoute
+  '/posts_/$postSlug/edit': typeof PostsPostSlugEditRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/posts/$postSlug' | '/posts/create' | '/posts'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/posts/$postSlug'
+    | '/posts/create'
+    | '/posts'
+    | '/posts/$postSlug/edit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/posts/$postSlug' | '/posts/create' | '/posts'
+  to:
+    | '/'
+    | '/about'
+    | '/posts/$postSlug'
+    | '/posts/create'
+    | '/posts'
+    | '/posts/$postSlug/edit'
   id:
     | '__root__'
     | '/'
@@ -135,6 +164,7 @@ export interface FileRouteTypes {
     | '/posts/$postSlug'
     | '/posts/create'
     | '/posts/'
+    | '/posts_/$postSlug/edit'
   fileRoutesById: FileRoutesById
 }
 
@@ -144,6 +174,7 @@ export interface RootRouteChildren {
   PostsPostSlugRoute: typeof PostsPostSlugRoute
   PostsCreateRoute: typeof PostsCreateRoute
   PostsIndexRoute: typeof PostsIndexRoute
+  PostsPostSlugEditRoute: typeof PostsPostSlugEditRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -152,6 +183,7 @@ const rootRouteChildren: RootRouteChildren = {
   PostsPostSlugRoute: PostsPostSlugRoute,
   PostsCreateRoute: PostsCreateRoute,
   PostsIndexRoute: PostsIndexRoute,
+  PostsPostSlugEditRoute: PostsPostSlugEditRoute,
 }
 
 export const routeTree = rootRoute
@@ -168,7 +200,8 @@ export const routeTree = rootRoute
         "/about",
         "/posts/$postSlug",
         "/posts/create",
-        "/posts/"
+        "/posts/",
+        "/posts_/$postSlug/edit"
       ]
     },
     "/": {
@@ -185,6 +218,9 @@ export const routeTree = rootRoute
     },
     "/posts/": {
       "filePath": "posts.index.tsx"
+    },
+    "/posts_/$postSlug/edit": {
+      "filePath": "posts_.$postSlug.edit.tsx"
     }
   }
 }
