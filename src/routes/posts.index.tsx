@@ -5,7 +5,7 @@ import { getPosts } from "../lib/queries.ts";
 import type { PostType } from "../../types.ts";
 import he from "he";
 import { z } from "zod";
-import {DateTime} from "luxon";
+import { DateTime } from "luxon";
 
 const postsSearchSchema = z.object({
   page: z.number().optional().catch(1),
@@ -89,8 +89,13 @@ function PostsPage() {
                     {he.decode(post.content).split(" ").slice(0, 20).join(" ")}
                     ...
                   </p>
-                  <div className="flex gap-4 items-center">
-                    <p className="text-mobsmp lg:text-desksmp text-slate-600">Last updated: {DateTime.fromISO(post.updatedAt).toLocaleString(DateTime.DATETIME_MED)}</p>
+                  <div className="flex items-center gap-4">
+                    <p className="text-mobsmp text-slate-600 lg:text-desksmp">
+                      Last updated:{" "}
+                      {DateTime.fromISO(post.updatedAt).toLocaleString(
+                        DateTime.DATETIME_MED,
+                      )}
+                    </p>
                     <p className="text-mobsmp text-slate-600 lg:text-desksmp">
                       {post._count.comments} comments
                     </p>
