@@ -5,6 +5,7 @@ import { getPosts } from "../lib/queries.ts";
 import type { PostType } from "../../types.ts";
 import he from "he";
 import { z } from "zod";
+import {DateTime} from "luxon";
 
 const postsSearchSchema = z.object({
   page: z.number().optional().catch(1),
@@ -88,18 +89,21 @@ function PostsPage() {
                     {he.decode(post.content).split(" ").slice(0, 20).join(" ")}
                     ...
                   </p>
-                  <p className="text-mobsmp text-slate-600 lg:text-desksmp">
-                    {post._count.comments} comments
-                  </p>
-                  {post.published === true ? (
-                    <p className="mt-2 w-min rounded-lg bg-green-300 px-2 py-1 text-mobxsp text-green-800 lg:text-deskxsp">
-                      Published
+                  <div className="flex gap-4 items-center">
+                    <p className="text-mobsmp lg:text-desksmp text-slate-600">Last updated: {DateTime.fromISO(post.updatedAt).toLocaleString(DateTime.DATETIME_MED)}</p>
+                    <p className="text-mobsmp text-slate-600 lg:text-desksmp">
+                      {post._count.comments} comments
                     </p>
-                  ) : (
-                    <p className="mt-2 w-max rounded-lg bg-amber-300 px-2 py-1 text-mobxsp text-amber-800 lg:text-deskxsp">
-                      Draft Mode
-                    </p>
-                  )}
+                    {post.published === true ? (
+                      <p className="w-min rounded-lg bg-green-300 px-2 py-1 text-mobxsp text-green-800 lg:text-deskxsp">
+                        Published
+                      </p>
+                    ) : (
+                      <p className="w-max rounded-lg bg-amber-300 px-2 py-1 text-mobxsp text-amber-800 lg:text-deskxsp">
+                        Draft Mode
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <Link
                   className="rounded-lg border-2 border-indigo-700 px-6 py-2 font-sans font-semibold text-indigo-700"
