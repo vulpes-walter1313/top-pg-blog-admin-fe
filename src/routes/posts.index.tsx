@@ -142,6 +142,7 @@ function PostsPage() {
                         page: idx + 1,
                       }}
                       className={`rounded-lg border border-slate-300 bg-white p-2 text-mobsmp shadow-sm lg:text-desksmp ${search.page === idx + 1 ? "font-semibold lg:font-semibold" : ""}`}
+                      key={idx}
                     >
                       {idx + 1}
                     </Link>
