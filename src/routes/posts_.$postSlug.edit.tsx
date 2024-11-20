@@ -42,7 +42,6 @@ function PostEditPage() {
   useEffect(() => {
     // this is not working as expected
     // slug is not found, check api for the return value.
-    console.log("useEffect Ran");
     if (status === "success" && postData != undefined) {
       setValue("title", he.decode(postData.post.title));
       setValue("content", he.decode(postData.post.content));
