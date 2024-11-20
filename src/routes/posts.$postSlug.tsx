@@ -184,6 +184,7 @@ function PostPage() {
                         <button
                           className="rounded-lg border border-slate-300 bg-white px-3 py-2 shadow-sm"
                           onClick={() => setCommentsPage(idx + 1)}
+                          key={idx}
                         >
                           {idx + 1}
                         </button>
