@@ -35,7 +35,7 @@ export const getPosts = async (
     };
   }
   const res = await fetch(
-    `http://localhost:3000/posts?limit=10&page=${page}&publishedstatus=${publishedStatus}`,
+    `http://localhost:3000/posts?limit=10&page=${page}&publishedstatus=${publishedStatus}&summarize=true`,
     fetchOptions,
   );
   if (!res.ok) {

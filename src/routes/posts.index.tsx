@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { getPosts } from "../lib/queries.ts";
-import type { PostType } from "../../types.ts";
 import he from "he";
 import { z } from "zod";
 import { DateTime } from "luxon";
@@ -21,6 +20,16 @@ export const Route = createFileRoute("/posts/")({
   validateSearch: (search) => postsSearchSchema.parse(search),
 });
 
+type PostType = {
+  id: string;
+  title: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  slug: string;
+  comments: number;
+  published: boolean;
+};
 function PostsPage() {
   const search = Route.useSearch();
   const postQuery = useQuery({
@@ -82,22 +91,22 @@ function PostsPage() {
           {postQuery.data &&
             postQuery.data.posts &&
             postQuery.data.posts.map((post: PostType) => (
-              <article className="flex flex-col items-start gap-6 rounded-lg border border-slate-300 bg-white px-4 py-6">
+              <article
+                key={post.id}
+                className="flex flex-col items-start gap-6 rounded-lg border border-slate-300 bg-white px-4 py-6"
+              >
                 <div>
                   <h2 className="pb-4">{he.decode(post.title)}</h2>
-                  <p className="pb-2">
-                    {he.decode(post.content).split(" ").slice(0, 20).join(" ")}
-                    ...
-                  </p>
+                  <p className="pb-2">{he.decode(post.content)}</p>
                   <div className="flex items-center gap-4">
                     <p className="text-mobsmp text-slate-600 lg:text-desksmp">
                       Last updated:{" "}
-                      {DateTime.fromISO(post.updatedAt).toLocaleString(
+                      {DateTime.fromISO(post.updated_at).toLocaleString(
                         DateTime.DATETIME_MED,
                       )}
                     </p>
                     <p className="text-mobsmp text-slate-600 lg:text-desksmp">
-                      {post._count.comments} comments
+                      {post.comments} comments
                     </p>
                     {post.published === true ? (
                       <p className="w-min rounded-lg bg-green-300 px-2 py-1 text-mobxsp text-green-800 lg:text-deskxsp">
