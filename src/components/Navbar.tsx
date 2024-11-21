@@ -1,9 +1,10 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { getAuthStatus } from "../lib/queries";
 
 export default function Navbar() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { data, isSuccess } = useQuery({
     queryFn: getAuthStatus,
     queryKey: ["user"],
@@ -11,6 +12,7 @@ export default function Navbar() {
   const logout = () => {
     localStorage.removeItem("auth_token");
     queryClient.invalidateQueries(["user"]);
+    navigate({to:'/'});
   };
 
   return (
