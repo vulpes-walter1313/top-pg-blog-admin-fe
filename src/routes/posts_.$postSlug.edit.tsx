@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import he from "he";
 import { updatePost } from "../lib/mutations";
 import slugify from "slugify";
+import AuthCheck from "../components/AuthCheck";
 
 export const Route = createFileRoute("/posts_/$postSlug/edit")({
   component: PostEditPage,
@@ -79,130 +80,139 @@ function PostEditPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-16 text-slate-950">
-      <div className="mx-auto flex max-w-5xl gap-14">
-        <aside className="flex w-full max-w-48 justify-center gap-4 self-start rounded-lg border border-slate-300 bg-white p-4 shadow-md">
-          <Link
-            to="/posts/$postSlug"
-            params={{ postSlug: params.postSlug }}
-            className="rounded-lg bg-red-600 px-6 py-2 text-lg font-semibold text-white"
-          >
-            Cancel
-          </Link>
-        </aside>
-        <main className="w-full rounded-lg border border-slate-300 bg-white px-4 py-6 shadow-md">
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={handleSubmit(formOnSubmit)}
-          >
-            {updateError != undefined && (
-              <p className="rounded-lg bg-red-100 p-2 text-mobsmp text-red-800 lg:text-desksmp">
-                {updateError}
-              </p>
-            )}
-            <div className="flex flex-col gap-2">
-              <label htmlFor="title" className="font-medium text-slate-800">
-                Title
-              </label>
-              <input
-                type="text"
-                id="title"
-                className="rounded-lg border border-slate-300 px-4 py-2 text-slate-700"
-                placeholder="Your title goes here"
-                {...register("title", {
-                  minLength: {
-                    value: 1,
-                    message: "Title must not be empty",
-                  },
-                  maxLength: {
-                    value: 256,
-                    message: "Title can't be longer than 256 characters",
-                  },
-                })}
-              />
-              {errors && errors.title && (
-                <p className="rounded-lg border border-red-200 bg-red-100 px-4 py-2 text-red-800">
-                  {errors.title.message}
-                </p>
-              )}
-            </div>
-            <div className="flex flex-col gap-2">
-              <label htmlFor="content" className="font-medium text-slate-800">
-                Content
-              </label>
-              <textarea
-                id="content"
-                className="min-h-48 rounded-lg border border-slate-300 px-4 py-2 text-slate-700"
-                placeholder="Your content goes here"
-                {...register("content", {
-                  minLength: { value: 1, message: "Content can not be empty" },
-                  maxLength: {
-                    value: 4900,
-                    message: "Content must not be longer than 4900 characters",
-                  },
-                })}
-              ></textarea>
-              {errors && errors.content && (
-                <p className="rounded-lg border border-red-200 bg-red-100 px-4 py-2 text-red-800">
-                  {errors.content.message}
-                </p>
-              )}
-            </div>
-            <div className="flex flex-col gap-2">
-              <label htmlFor="slug" className="font-medium text-slate-800">
-                Slug
-              </label>
-              <input
-                type="text"
-                id="slug"
-                className="rounded-lg border border-slate-300 px-4 py-2 text-slate-700"
-                placeholder="your-slug-goes-here"
-                {...register("slug", {
-                  minLength: {
-                    value: 3,
-                    message: "The slug must be 3 characters or longer",
-                  },
-                  maxLength: {
-                    value: 72,
-                    message: "Slug must be less than 73 characters",
-                  },
-                })}
-              />
-              {errors && errors.slug && (
-                <p className="rounded-lg border border-red-200 bg-red-100 px-4 py-2 text-red-800">
-                  {errors.slug.message}
-                </p>
-              )}
-              <button
-                type="button"
-                onClick={() => {
-                  const title = getValues("title");
-                  setValue("slug", slugify(title, { lower: true }));
-                }}
-                className="mt-2 self-start rounded-lg border-2 border-indigo-700 px-6 py-2 text-mobsmp font-semibold text-indigo-700 lg:text-desksmp lg:font-semibold"
-              >
-                Slugify Title
-              </button>
-            </div>
-            <div className="flex items-center gap-4">
-              <label htmlFor="published" className="font-medium text-slate-800">
-                Is Published
-              </label>
-              <input
-                type="checkbox"
-                id="published"
-                className="h-4 w-4 rounded-lg border border-slate-300 text-slate-700"
-                {...register("published")}
-              />
-            </div>
-            <button
-              type="submit"
-              className="self-start rounded-lg bg-slate-800 px-6 py-2 text-lg font-semibold text-slate-50"
+      <AuthCheck>
+        <div className="mx-auto flex max-w-5xl gap-14">
+          <aside className="flex w-full max-w-48 justify-center gap-4 self-start rounded-lg border border-slate-300 bg-white p-4 shadow-md">
+            <Link
+              to="/posts/$postSlug"
+              params={{ postSlug: params.postSlug }}
+              className="rounded-lg bg-red-600 px-6 py-2 text-lg font-semibold text-white"
             >
-              Save
-            </button>
-          </form>
-        </main>
-      </div>
+              Cancel
+            </Link>
+          </aside>
+          <main className="w-full rounded-lg border border-slate-300 bg-white px-4 py-6 shadow-md">
+            <form
+              className="flex flex-col gap-4"
+              onSubmit={handleSubmit(formOnSubmit)}
+            >
+              {updateError != undefined && (
+                <p className="rounded-lg bg-red-100 p-2 text-mobsmp text-red-800 lg:text-desksmp">
+                  {updateError}
+                </p>
+              )}
+              <div className="flex flex-col gap-2">
+                <label htmlFor="title" className="font-medium text-slate-800">
+                  Title
+                </label>
+                <input
+                  type="text"
+                  id="title"
+                  className="rounded-lg border border-slate-300 px-4 py-2 text-slate-700"
+                  placeholder="Your title goes here"
+                  {...register("title", {
+                    minLength: {
+                      value: 1,
+                      message: "Title must not be empty",
+                    },
+                    maxLength: {
+                      value: 256,
+                      message: "Title can't be longer than 256 characters",
+                    },
+                  })}
+                />
+                {errors && errors.title && (
+                  <p className="rounded-lg border border-red-200 bg-red-100 px-4 py-2 text-red-800">
+                    {errors.title.message}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="content" className="font-medium text-slate-800">
+                  Content
+                </label>
+                <textarea
+                  id="content"
+                  className="min-h-48 rounded-lg border border-slate-300 px-4 py-2 text-slate-700"
+                  placeholder="Your content goes here"
+                  {...register("content", {
+                    minLength: {
+                      value: 1,
+                      message: "Content can not be empty",
+                    },
+                    maxLength: {
+                      value: 4900,
+                      message:
+                        "Content must not be longer than 4900 characters",
+                    },
+                  })}
+                ></textarea>
+                {errors && errors.content && (
+                  <p className="rounded-lg border border-red-200 bg-red-100 px-4 py-2 text-red-800">
+                    {errors.content.message}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="slug" className="font-medium text-slate-800">
+                  Slug
+                </label>
+                <input
+                  type="text"
+                  id="slug"
+                  className="rounded-lg border border-slate-300 px-4 py-2 text-slate-700"
+                  placeholder="your-slug-goes-here"
+                  {...register("slug", {
+                    minLength: {
+                      value: 3,
+                      message: "The slug must be 3 characters or longer",
+                    },
+                    maxLength: {
+                      value: 72,
+                      message: "Slug must be less than 73 characters",
+                    },
+                  })}
+                />
+                {errors && errors.slug && (
+                  <p className="rounded-lg border border-red-200 bg-red-100 px-4 py-2 text-red-800">
+                    {errors.slug.message}
+                  </p>
+                )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const title = getValues("title");
+                    setValue("slug", slugify(title, { lower: true }));
+                  }}
+                  className="mt-2 self-start rounded-lg border-2 border-indigo-700 px-6 py-2 text-mobsmp font-semibold text-indigo-700 lg:text-desksmp lg:font-semibold"
+                >
+                  Slugify Title
+                </button>
+              </div>
+              <div className="flex items-center gap-4">
+                <label
+                  htmlFor="published"
+                  className="font-medium text-slate-800"
+                >
+                  Is Published
+                </label>
+                <input
+                  type="checkbox"
+                  id="published"
+                  className="h-4 w-4 rounded-lg border border-slate-300 text-slate-700"
+                  {...register("published")}
+                />
+              </div>
+              <button
+                type="submit"
+                className="self-start rounded-lg bg-slate-800 px-6 py-2 text-lg font-semibold text-slate-50"
+              >
+                Save
+              </button>
+            </form>
+          </main>
+        </div>
+      </AuthCheck>
     </div>
   );
 }
