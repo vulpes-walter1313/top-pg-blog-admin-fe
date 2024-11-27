@@ -158,7 +158,7 @@ function PostPage() {
                           </p>
                         </div>
                         <p className="text-mobp text-slate-800 lg:text-deskp">
-                          {comment.content}
+                          {he.decode(comment.content)}
                         </p>
                         <button
                           type="button"
