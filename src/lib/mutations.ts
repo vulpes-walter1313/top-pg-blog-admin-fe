@@ -24,7 +24,7 @@ export const createPost = (data: CreatePostPayload) => {
       "Content-Type": "application/json",
     };
   }
-  return fetch(`http://localhost:3000/posts`, fetchOptions);
+  return fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`, fetchOptions);
 };
 
 export const deletePost = (postSlug: string) => {
@@ -38,7 +38,10 @@ export const deletePost = (postSlug: string) => {
       Authorization: authToken,
     };
   }
-  return fetch(`http://localhost:3000/posts/${postSlug}`, fetchOptions);
+  return fetch(
+    `${import.meta.env.VITE_BACKEND_URL}/posts/${postSlug}`,
+    fetchOptions,
+  );
 };
 
 export const deleteComment = (postSlug: string, commentId: number) => {
@@ -53,7 +56,7 @@ export const deleteComment = (postSlug: string, commentId: number) => {
     };
   }
   return fetch(
-    `http://localhost:3000/posts/${postSlug}/comments/${commentId}`,
+    `${import.meta.env.VITE_BACKEND_URL}/posts/${postSlug}/comments/${commentId}`,
     fetchOptions,
   );
 };
@@ -87,5 +90,8 @@ export const updatePost = (data: UpdatePostPayload) => {
       "Content-Type": "application/json",
     };
   }
-  return fetch(`http://localhost:3000/posts/${data.postSlug}`, fetchOptions);
+  return fetch(
+    `${import.meta.env.VITE_BACKEND_URL}/posts/${data.postSlug}`,
+    fetchOptions,
+  );
 };

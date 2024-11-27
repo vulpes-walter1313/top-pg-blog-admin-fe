@@ -11,7 +11,10 @@ export const getAuthStatus = async () => {
       Authorization: token,
     };
   }
-  const res = await fetch("http://localhost:3000/authcheck", fetchOptions);
+  const res = await fetch(
+    `${import.meta.env.VITE_BACKEND_URL}/authcheck`,
+    fetchOptions,
+  );
   if (!res.ok) {
     throw new Error("Error is fetching auth status");
   }
@@ -35,7 +38,7 @@ export const getPosts = async (
     };
   }
   const res = await fetch(
-    `http://localhost:3000/posts?limit=10&page=${page}&publishedstatus=${publishedStatus}&summarize=true`,
+    `${import.meta.env.VITE_BACKEND_URL}/posts?limit=10&page=${page}&publishedstatus=${publishedStatus}&summarize=true`,
     fetchOptions,
   );
   if (!res.ok) {
@@ -59,7 +62,10 @@ export const getPost = async (slug: string) => {
       Authorization: authToken,
     };
   }
-  const res = await fetch(`http://localhost:3000/posts/${slug}`, fetchOptions);
+  const res = await fetch(
+    `${import.meta.env.VITE_BACKEND_URL}/posts/${slug}`,
+    fetchOptions,
+  );
   if (!res.ok) {
     const data = await res.json();
     const message = getErrorMessageFromReq(data);
@@ -81,7 +87,7 @@ export const getPostComments = async (slug: string, page: number) => {
     };
   }
   const res = await fetch(
-    `http://localhost:3000/posts/${slug}/comments?limit=10&page=${page}`,
+    `${import.meta.env.VITE_BACKEND_URL}/posts/${slug}/comments?limit=10&page=${page}`,
     fetchOptions,
   );
   if (!res.ok) {
