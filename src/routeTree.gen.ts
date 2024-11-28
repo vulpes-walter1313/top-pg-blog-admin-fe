@@ -8,8 +8,6 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
@@ -19,17 +17,7 @@ import { Route as PostsCreateImport } from './routes/posts.create'
 import { Route as PostsPostSlugImport } from './routes/posts.$postSlug'
 import { Route as PostsPostSlugEditImport } from './routes/posts_.$postSlug.edit'
 
-// Create Virtual Routes
-
-const AboutLazyImport = createFileRoute('/about')()
-
 // Create/Update Routes
-
-const AboutLazyRoute = AboutLazyImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -72,13 +60,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/posts/$postSlug': {
       id: '/posts/$postSlug'
       path: '/posts/$postSlug'
@@ -114,7 +95,6 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutLazyRoute
   '/posts/$postSlug': typeof PostsPostSlugRoute
   '/posts/create': typeof PostsCreateRoute
   '/posts': typeof PostsIndexRoute
@@ -123,7 +103,6 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutLazyRoute
   '/posts/$postSlug': typeof PostsPostSlugRoute
   '/posts/create': typeof PostsCreateRoute
   '/posts': typeof PostsIndexRoute
@@ -133,7 +112,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/about': typeof AboutLazyRoute
   '/posts/$postSlug': typeof PostsPostSlugRoute
   '/posts/create': typeof PostsCreateRoute
   '/posts/': typeof PostsIndexRoute
@@ -144,7 +122,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/about'
     | '/posts/$postSlug'
     | '/posts/create'
     | '/posts'
@@ -152,7 +129,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/about'
     | '/posts/$postSlug'
     | '/posts/create'
     | '/posts'
@@ -160,7 +136,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/about'
     | '/posts/$postSlug'
     | '/posts/create'
     | '/posts/'
@@ -170,7 +145,6 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutLazyRoute: typeof AboutLazyRoute
   PostsPostSlugRoute: typeof PostsPostSlugRoute
   PostsCreateRoute: typeof PostsCreateRoute
   PostsIndexRoute: typeof PostsIndexRoute
@@ -179,7 +153,6 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutLazyRoute: AboutLazyRoute,
   PostsPostSlugRoute: PostsPostSlugRoute,
   PostsCreateRoute: PostsCreateRoute,
   PostsIndexRoute: PostsIndexRoute,
@@ -197,7 +170,6 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/about",
         "/posts/$postSlug",
         "/posts/create",
         "/posts/",
@@ -206,9 +178,6 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
-    },
-    "/about": {
-      "filePath": "about.lazy.tsx"
     },
     "/posts/$postSlug": {
       "filePath": "posts.$postSlug.tsx"
