@@ -1,8 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { getErrorMessageFromReq } from "../lib/handleErrors";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { login } from "../lib/mutations";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -21,32 +21,26 @@ function HomePage() {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginInputs>();
+  const loginMuta = useMutation({
+    mutationFn: login,
+    onSuccess: () => {
+      setLoginError(undefined);
+      queryClient.invalidateQueries(["user"]);
+      navigate({ to: "/posts" });
+    },
+    onError: (error) => {
+      if (error instanceof Error) {
+        setLoginError(error.message);
+      } else if (typeof error === "string") {
+        setLoginError(error);
+      } else {
+        setLoginError("Error trying to log in");
+      }
+    },
+  });
 
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
-    const res = await fetch("http://localhost:3000/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      mode: "cors",
-      body: JSON.stringify({ email: data.email, password: data.password }),
-    });
-    if (res.ok) {
-      const data = await res.json();
-      console.log(data);
-      if (data.success === true) {
-        setLoginError(undefined);
-        localStorage.setItem("auth_token", data.token);
-        queryClient.invalidateQueries(["user"]);
-        navigate({ to: "/posts" });
-      } else {
-        setLoginError("Error loggin in");
-      }
-    } else {
-      const data = await res.json();
-      const message = getErrorMessageFromReq(data);
-      setLoginError(message || "Some Strange Error Occured");
-    }
+    loginMuta.mutate({ email: data.email, password: data.password });
   };
   return (
     <div>

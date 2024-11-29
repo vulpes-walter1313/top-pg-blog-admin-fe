@@ -1,3 +1,31 @@
+import { getErrorMessageFromReq } from "./handleErrors";
+
+type LoginPayload = {
+  email: string;
+  password: string;
+};
+export const login = async ({ email, password }: LoginPayload) => {
+  const fetchOptions: RequestInit = {
+    method: "POST",
+    mode: "cors",
+    body: JSON.stringify({ email, password }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const res = await fetch(
+    `${import.meta.env.VITE_BACKEND_URL}/login`,
+    fetchOptions,
+  );
+  if (!res.ok) {
+    const data = await res.json();
+    const message = getErrorMessageFromReq(data);
+    throw new Error(message ?? "Error logging in");
+  }
+  const data = await res.json();
+  return data;
+};
+
 type CreatePostPayload = {
   title: string;
   content: string;
