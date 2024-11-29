@@ -23,6 +23,7 @@ export const login = async ({ email, password }: LoginPayload) => {
     throw new Error(message ?? "Error logging in");
   }
   const data = await res.json();
+  localStorage.setItem("auth_token", data.token);
   return data;
 };
 
